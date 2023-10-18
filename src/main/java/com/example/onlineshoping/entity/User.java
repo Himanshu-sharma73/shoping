@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 @Entity(name = "userdetails")
 public class User {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
