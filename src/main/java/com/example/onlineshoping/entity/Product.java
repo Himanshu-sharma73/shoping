@@ -14,7 +14,6 @@ public class Product {
 
     private  String name;// at leaat 3 char
     
-    
     private String description; //min 10= max 200 char
     private double mrp; //must be > 0
     private int discountPercentage; //min  = 0, max= 100
