@@ -9,10 +9,12 @@ import java.time.LocalDate;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+   // @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     private  String name;// at leaat 3 char
+    
+    
     private String description; //min 10= max 200 char
     private double mrp; //must be > 0
     private int discountPercentage; //min  = 0, max= 100
@@ -37,24 +39,47 @@ public class Product {
     }
 
     public void setName(String name) {
-        this.name = name;
+//    if (validateName(name)) {
+//    	this.name =name ;	
+//    	}else {
+//    		throw new IllegalArgumentException("Invalid name. Name must have at least 3 characters.");
+//    	}
+//    }
+//    
+//	private boolean validateName(String name) {
+//		
+//		return name!=null && name.trim().length()>=3;
+    	if(name!=null && name.trim().length()>=3) {
+    		this.name = name;
+	}else {
+		throw new IllegalArgumentException(" Invaild name. Name must have at least 3 characers.");
+	}
+    	
     }
 
-
-    public String getDescription() {
+	public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+    	  if (description != null && description.length() >= 10 && description.length() <= 200) {
+              this.description = description;
+          } else {
+              // Throw an exception or handle the invalid input based on your application's requirements
+              throw new IllegalArgumentException("Description must be between 10 and 200 characters.");
+	}
     }
 
-    public double getMrp() {
+	public double getMrp() {
         return mrp;
     }
 
     public void setMrp(double mrp) {
+    	if(mrp>0) {
         this.mrp = mrp;
+    }else {
+    	throw new IllegalArgumentException("MRP must be greater than 0");
+    }
     }
 
     public int getDiscountPercentage() {
@@ -62,7 +87,11 @@ public class Product {
     }
 
     public void setDiscountPercentage(int discountPercentage) {
+    	if(discountPercentage>=0 && discountPercentage<=100) {
         this.discountPercentage = discountPercentage;
+    }else {
+    	throw new IllegalArgumentException("discountPercentage must be between 0 to 100 ");
+    }
     }
 
     public long getTax() {
@@ -70,7 +99,11 @@ public class Product {
     }
 
     public void setTax(long tax) {
+    	if(tax>=0 && tax<=28) {
         this.tax = tax;
+    }else {
+    	throw new IllegalArgumentException(" Tax must be between 0 to 28.");
+    }
     }
 
     public LocalDate getMfgDate() {
@@ -94,7 +127,11 @@ public class Product {
     }
 
     public void setQuantity(int quantity) {
+    	if(quantity>=1) {
         this.quantity = quantity;
+    }else {
+    	throw new IllegalArgumentException("Quntity must be at least 1.");
+    }
     }
 
 
