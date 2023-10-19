@@ -1,10 +1,12 @@
 package com.example.onlineshoping.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity(name = "userdetails")
 public class User {
-
 
 
     @Id
@@ -14,7 +16,7 @@ public class User {
     private long mobileNo;
 
     private String email;
-    private  String address;
+    private String address;
 
     public int getId() {
         return id;

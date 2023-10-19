@@ -7,6 +7,9 @@ import com.example.onlineshoping.Repo.UserRepository;
 import com.example.onlineshoping.entity.Cart;
 import com.example.onlineshoping.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +24,17 @@ public class ProductController {
 
     @GetMapping("/products")
     public List<Product> getProductDetails() {
-        return productRepository.findAll();
+        List<Product> products = productRepository.findAll();
+        return products;
     }
 
     @GetMapping("/products/{id}")
-    public Optional<Product> getProductDetailsById(@PathVariable int id) {
-        return productRepository.findById(id);
+    public ResponseEntity<Optional<Product>> getProductDetailsById(@PathVariable int id) {
+        Optional<Product> products =  productRepository.findById(id);
+        if (products.isPresent()){
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/products")
@@ -35,14 +43,17 @@ public class ProductController {
         return "product posted successfully";
     }
 
-    @DeleteMapping("product/{id}")
-    public String deleteProduct(@PathVariable int id) {
-        productRepository.deleteById(id);
-        return "product deleted successfully id is" + id;
+    @DeleteMapping("products/{id}")
+    public ResponseEntity deleteProduct(@PathVariable int id) {
+        Optional<Product> product=productRepository.findById(id);
+        if (product.isPresent()) {
+            productRepository.deleteById(id);
+            return ResponseEntity.ok("Product deleted successfully id is "+id);
+        }return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product is not present");
     }
 
-    @PutMapping("/product/{id}")
-    public String updateProduct(@PathVariable int id, @RequestBody Product product) {
+    @PutMapping("/products/{id}")
+    public String updateProduct(@RequestBody Product product) {
         productRepository.save(product);
         return "update successfully";
     }
