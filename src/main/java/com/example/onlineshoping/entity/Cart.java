@@ -1,9 +1,11 @@
 package com.example.onlineshoping.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Set;
 
+@Data
 @Entity(name = "cart")
 public class Cart {
 
@@ -16,30 +18,4 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart")
     private Set<Item> items;
-
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @Override
-    public String toString() {
-        return "Cart{" +
-                "id=" + id +
-                ", user=" + user +
-                '}';
-    }
 }

@@ -4,7 +4,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "userdetails")
 public class User {
 
@@ -13,52 +21,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     
-    
+    @Size(min = 3,message = "User name should have at least three Character")
     private String name;
+
+    @Range(min = 10,max = 12,message = "Enter Correct Number")
     private long mobileNo;
 
+    @Email(message = "Enter Correct Email")
     private String email;
+
+    @NotBlank(message = "Address should not be Blank")
+    @NotNull(message = "Address should not be Null")
     private String address;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public long getMobileNo() {
-        return mobileNo;
-    }
-
-    public void setMobileNo(long mobileNo) {
-        this.mobileNo = mobileNo;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", mobileNo=" + mobileNo +
-                ", address='" + address + '\'' +
-                '}';
-    }
 }
