@@ -6,6 +6,8 @@ import com.example.onlineshoping.entity.User;
 import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
 
+import com.example.onlineshoping.wrapperclasses.UserWrapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String postUser(@RequestBody User user) {
+    public String postUser(@Valid @RequestBody User user) {
         userRepository.save(user);
         return "User added Successfully";
     }
@@ -63,14 +65,4 @@ public class UserController {
 }
 
 
-class UserWrapper{
-	private User user;
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-}
