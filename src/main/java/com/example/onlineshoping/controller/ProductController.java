@@ -1,16 +1,22 @@
 package com.example.onlineshoping.controller;
 
 
-import com.example.onlineshoping.Repo.CartRepository;
-import com.example.onlineshoping.Repo.ProductRepository;
-import com.example.onlineshoping.Repo.UserRepository;
-import com.example.onlineshoping.entity.Cart;
-import com.example.onlineshoping.entity.Product;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.onlineshoping.Repo.ProductRepository;
+import com.example.onlineshoping.entity.Product;
+
+import jakarta.validation.Valid;
 
 @RestController
 public class ProductController {
@@ -30,7 +36,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public String postProduct(@RequestBody Product product) {
+    public String postProduct(@Valid @RequestBody Product product) {
         productRepository.save(product);
         return "product posted successfully";
     }
