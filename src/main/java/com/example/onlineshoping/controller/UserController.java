@@ -47,9 +47,25 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<String> updateUser(@RequestBody User user) {
-        userRepository.save(user);
-        return ResponseEntity.ok("User Updated successfully " + user);
+    public User updateUser(@Valid @RequestBody User user, @PathVariable  int id) {
+      Optional<User> optionalUser=userRepository.findById(id);
+      if (optionalUser.isPresent()){
+          User newUser=optionalUser.get();
+          if(user.getName()!=null){
+              newUser.setName(user.getName());
+          }
+          if(user.getMobileNo()!=0){
+              newUser.setMobileNo(user.getMobileNo());
+          }
+          if (user.getAddress()!=null){
+              newUser.setAddress(user.getAddress());
+          }
+           return userRepository.save(newUser);
+
+      }
+        else {
+            throw  new ResourceNotFoundException("user","id:", id, "1001");
+      }
     }
 
     @DeleteMapping("users/{id}")
