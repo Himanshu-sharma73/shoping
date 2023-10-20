@@ -6,6 +6,10 @@ import com.example.onlineshoping.Repo.ProductRepository;
 import com.example.onlineshoping.Repo.UserRepository;
 import com.example.onlineshoping.entity.Cart;
 import com.example.onlineshoping.entity.Product;
+import com.example.onlineshoping.exception.ApiResponse;
+import com.example.onlineshoping.exception.ResourceNotFoundException;
+import com.example.onlineshoping.wrapperclasses.ProductWrapper;
+import com.example.onlineshoping.wrapperclasses.UserWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -29,12 +33,16 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<Optional<Product>> getProductDetailsById(@PathVariable int id) {
+    public ResponseEntity<ApiResponse> getProductDetailsById(@PathVariable int id) {
         Optional<Product> products =  productRepository.findById(id);
-        if (products.isPresent()){
-            return new ResponseEntity<>(products, HttpStatus.OK);
-        }
-        return ResponseEntity.notFound().build();
+       if(products.isEmpty()){
+           throw new ResourceNotFoundException("Product","id",id,"1002");
+       }
+        ApiResponse apiResponse = new ApiResponse();
+        ProductWrapper productWrapper=new ProductWrapper();
+        productWrapper.setProduct(products.get());
+        apiResponse.setData(productWrapper);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
     @PostMapping("/products")

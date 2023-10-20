@@ -11,20 +11,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ApiResponse {
-
-	public Object getData() {
-		return data;
-	}
-	public void setData(Object data) {
-		this.data = data;
-	}
-	public Object getError() {
-		return error;
-	}
-	public void setError(Object error) {
-		this.error = error;
-	}
 	private Object data;
 	private Object error;
-
 }
