@@ -9,6 +9,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     
+<<<<<<< HEAD
+=======
+    
+>>>>>>> branch 'master' of https://github.com/Himanshu-sharma73/shoping.git
     private String name;
     
     private long mobileNo;
