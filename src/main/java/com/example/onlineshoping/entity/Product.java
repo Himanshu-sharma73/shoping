@@ -2,7 +2,6 @@ package com.example.onlineshoping.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Entity
