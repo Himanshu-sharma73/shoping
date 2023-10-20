@@ -13,7 +13,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    private  String name;// at leaat 3 char
+    private  String name;// at least 3 char
     private String description; //min 10= max 200 char
     private double mrp; //must be > 0
     private int discountPercentage; //min  = 0, max= 100
