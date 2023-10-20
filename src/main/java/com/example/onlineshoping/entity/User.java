@@ -8,7 +8,6 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 
 @Data
 @NoArgsConstructor
@@ -23,8 +22,9 @@ public class User {
     
     @Size(min = 3,message = "User name should have at least three Character")
     private String name;
-
-    @Range(min = 10,max = 12,message = "Enter Correct Number")
+    
+    
+    @Min(10) @Max(10)
     private long mobileNo;
 
     @Email(message = "Enter Correct Email")
