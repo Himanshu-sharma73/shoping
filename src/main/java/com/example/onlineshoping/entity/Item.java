@@ -22,7 +22,6 @@ public class Item {
     @ManyToOne
     private Cart cart;
 
-    
     public Item(Product product,Cart cart){
         this.product=product;
         this.cart=cart;
