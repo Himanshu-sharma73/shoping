@@ -1,17 +1,13 @@
 package com.example.onlineshoping.controller;
 
 
-import com.example.onlineshoping.Repo.CartRepository;
 import com.example.onlineshoping.Repo.ProductRepository;
-import com.example.onlineshoping.Repo.UserRepository;
-import com.example.onlineshoping.entity.Cart;
 import com.example.onlineshoping.entity.Product;
 import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
 import com.example.onlineshoping.wrapperclasses.ProductWrapper;
-import com.example.onlineshoping.wrapperclasses.UserWrapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +42,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public String postProduct(@RequestBody Product product) {
+    public String postProduct(@Valid @RequestBody Product product) {
         productRepository.save(product);
         return "product posted successfully";
     }
@@ -56,14 +52,48 @@ public class ProductController {
         Optional<Product> product=productRepository.findById(id);
         if (product.isPresent()) {
             productRepository.deleteById(id);
-            return ResponseEntity.ok("Product deleted successfully id is "+id);
-        }return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product is not present");
+            return ResponseEntity.ok("Product deleted successfully id:"+id);
+        }else {
+            throw  new ResourceNotFoundException("Product","id:", id, "1001");
+        }
     }
 
     @PutMapping("/products/{id}")
-    public String updateProduct(@RequestBody Product product) {
-        productRepository.save(product);
-        return "update successfully";
+    public Product updateProduct(@Valid@RequestBody Product product,@PathVariable Integer id) {
+        Optional<Product> optionalProduct=productRepository.findById(id);
+        if(optionalProduct.isPresent()){
+            Product product1=optionalProduct.get();
+            if (product.getName()!=null){
+                product1.setName(product.getName());
+            }
+            if (product.getDescription()!=null){
+                product1.setDescription(product.getDescription());
+            }
+            if (product.getMrp()!=0){
+                product1.setMrp(product.getMrp());
+            }
+            if(product.getDiscountPercentage()!=0){
+                product1.setDiscountPercentage(product.getDiscountPercentage());
+            }
+            if (product.getTax()!=0){
+                product1.setTax(product.getTax());
+            }
+            if (product.getExpDate()!=null){
+                product1.setExpDate(product.getExpDate());
+            }
+            if (product.getMfgDate()!=null){
+                product1.setMfgDate(product.getMfgDate());
+            }
+            if(product.getQuantity()!=0){
+                product1.setQuantity(product.getQuantity());
+            }
+            productRepository.save(product1);
+            return product1;
+        }
+        else {
+            throw new ResourceNotFoundException("Product", "id", id, "1002");
+        }
+
     }
 
 }
