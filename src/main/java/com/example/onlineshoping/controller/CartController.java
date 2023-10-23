@@ -48,7 +48,7 @@ public class CartController {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product is not Present");
                 }
                 Product product=optionalProduct.get();
-                Item item = new Item(product, cart);
+                Item item = new Item( product, cart);
                 itemRepository.save(item);
                 return ResponseEntity.ok("Product added to cart successfully");
             } else {
