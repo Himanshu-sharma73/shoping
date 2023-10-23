@@ -6,6 +6,7 @@ import com.example.onlineshoping.entity.Product;
 import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
 import com.example.onlineshoping.wrapperclasses.ProductWrapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public String postProduct(@RequestBody Product product) {
+    public String postProduct(@Valid @RequestBody Product product) {
         productRepository.save(product);
         return "product posted successfully";
     }
@@ -51,12 +52,14 @@ public class ProductController {
         Optional<Product> product=productRepository.findById(id);
         if (product.isPresent()) {
             productRepository.deleteById(id);
-            return ResponseEntity.ok("Product deleted successfully id is "+id);
-        }return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product is not present");
+            return ResponseEntity.ok("Product deleted successfully id:"+id);
+        }else {
+            throw  new ResourceNotFoundException("Product","id:", id, "1001");
+        }
     }
 
     @PutMapping("/products/{id}")
-    public Product updateProduct(@RequestBody Product product,@PathVariable Integer id) {
+    public Product updateProduct(@Valid@RequestBody Product product,@PathVariable Integer id) {
         Optional<Product> optionalProduct=productRepository.findById(id);
         if(optionalProduct.isPresent()){
             Product product1=optionalProduct.get();
