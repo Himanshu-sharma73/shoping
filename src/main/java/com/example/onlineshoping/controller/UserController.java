@@ -69,14 +69,16 @@ public class UserController {
     }
 
     @DeleteMapping("users/{id}")
-    public ResponseEntity deleteUser(@PathVariable int id) {
+    public String deleteUser(@PathVariable int id) {
        Optional<User> user=userRepository.findById(id);
         if (user.isPresent()){
             userRepository.deleteById(id);
+            return "user deleted successfully id:"+id;
         }
+        else {
+            throw  new ResourceNotFoundException("user","id:", id, "1001");
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not present");
-
+        }
     }
 }
 
