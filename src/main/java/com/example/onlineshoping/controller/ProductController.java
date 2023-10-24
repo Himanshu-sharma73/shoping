@@ -5,6 +5,7 @@ import com.example.onlineshoping.Repo.ProductRepository;
 import com.example.onlineshoping.entity.Product;
 import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
+import com.example.onlineshoping.wrapperclasses.ProductListWrapper;
 import com.example.onlineshoping.wrapperclasses.ProductWrapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,74 +24,89 @@ public class ProductController {
 
 
     @GetMapping("/products")
-    public List<Product> getProductDetails() {
+    public ResponseEntity<ApiResponse> getProductDetails() {
         List<Product> products = productRepository.findAll();
-        return products;
+        ApiResponse apiResponse = new ApiResponse();
+        ProductListWrapper productListWrapper = new ProductListWrapper();
+        productListWrapper.setProductList(products);
+        apiResponse.setData(productListWrapper);
+
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
     @GetMapping("/products/{id}")
     public ResponseEntity<ApiResponse> getProductDetailsById(@PathVariable int id) {
-        Optional<Product> products =  productRepository.findById(id);
-       if(products.isEmpty()){
-           throw new ResourceNotFoundException("Product","id",id,"1002");
-       }
+        Optional<Product> products = productRepository.findById(id);
+        if (products.isEmpty()) {
+            throw new ResourceNotFoundException("Product", "id", id, "1002");
+        }
         ApiResponse apiResponse = new ApiResponse();
-        ProductWrapper productWrapper=new ProductWrapper();
+        ProductWrapper productWrapper = new ProductWrapper();
         productWrapper.setProduct(products.get());
         apiResponse.setData(productWrapper);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
     @PostMapping("/products")
-    public String postProduct(@Valid @RequestBody Product product) {
-        productRepository.save(product);
-        return "product posted successfully";
+    public ResponseEntity<ApiResponse> postProduct(@Valid @RequestBody Product product) {
+        Product product1 = productRepository.save(product);
+        ApiResponse apiResponse = new ApiResponse();
+        ProductWrapper productWrapper = new ProductWrapper();
+        productWrapper.setProduct(product1);
+        apiResponse.setData(productWrapper);
+
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("products/{id}")
     public ResponseEntity deleteProduct(@PathVariable int id) {
-        Optional<Product> product=productRepository.findById(id);
+        Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
             productRepository.deleteById(id);
-            return ResponseEntity.ok("Product deleted successfully id:"+id);
-        }else {
-            throw  new ResourceNotFoundException("Product","id:", id, "1001");
+            return ResponseEntity.ok("Product deleted successfully id:" + id);
+        } else {
+            throw new ResourceNotFoundException("Product", "id:", id, "1001");
         }
     }
 
     @PutMapping("/products/{id}")
-    public Product updateProduct(@Valid@RequestBody Product product,@PathVariable Integer id) {
-        Optional<Product> optionalProduct=productRepository.findById(id);
-        if(optionalProduct.isPresent()){
-            Product product1=optionalProduct.get();
-            if (product.getName()!=null){
+    public ResponseEntity<ApiResponse> updateProduct(@Valid @RequestBody Product product, @PathVariable Integer id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product1 = optionalProduct.get();
+            if (product.getName() != null) {
                 product1.setName(product.getName());
             }
-            if (product.getDescription()!=null){
+            if (product.getDescription() != null) {
                 product1.setDescription(product.getDescription());
             }
-            if (product.getMrp()!=0){
+            if (product.getMrp() != 0) {
                 product1.setMrp(product.getMrp());
             }
-            if(product.getDiscountPercentage()!=0){
+            if (product.getDiscountPercentage() != 0) {
                 product1.setDiscountPercentage(product.getDiscountPercentage());
             }
-            if (product.getTax()!=0){
+            if (product.getTax() != 0) {
                 product1.setTax(product.getTax());
             }
-            if (product.getExpDate()!=null){
+            if (product.getExpDate() != null) {
                 product1.setExpDate(product.getExpDate());
             }
-            if (product.getMfgDate()!=null){
+            if (product.getMfgDate() != null) {
                 product1.setMfgDate(product.getMfgDate());
             }
-            if(product.getQuantity()!=0){
+            if (product.getQuantity() != 0) {
                 product1.setQuantity(product.getQuantity());
             }
-            productRepository.save(product1);
-            return product1;
-        }
-        else {
+            Product product2 = productRepository.save(product1);
+            ApiResponse apiResponse = new ApiResponse();
+            ProductWrapper productWrapper = new ProductWrapper();
+            productWrapper.setProduct(product2);
+            apiResponse.setData(productWrapper);
+
+            return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+
+        } else {
             throw new ResourceNotFoundException("Product", "id", id, "1002");
         }
 
