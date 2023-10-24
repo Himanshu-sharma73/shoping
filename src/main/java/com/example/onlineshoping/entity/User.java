@@ -15,6 +15,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Value;
+import org.hibernate.validator.constraints.Range;
 
 @Data
 @NoArgsConstructor
@@ -31,9 +33,9 @@ public class User {
     @Size(min = 3,message = "User name should have at least three Character")
     private String name;
 
-	@Min(value = 1000000000L,message = "Mobile number must be at least 10 digits.")
-	@Max(value = 9999999999L,message = "Mobile number must not exceed 10 digits.")
-	private long mobileNo;
+    @Min(value = 1000000000l,message = "Mobile number must be at least 10 digit")
+    @Max(value = 9999999999l,message = "Mobile number must not exceed 10 digit")
+    private long mobileNo;
 
 	@NotBlank(message = "Email address cannot be blank")
 	@Email(message = "Invalid email address")

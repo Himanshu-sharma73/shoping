@@ -7,6 +7,7 @@ import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
 
 import com.example.onlineshoping.wrapperclasses.UserWrapper;
+import com.example.onlineshoping.wrapperclasses.UsersListWrapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,13 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/users")
-    public List<User> getAllUser() {
-        return userRepository.findAll();
+    public ResponseEntity<ApiResponse> getAllUser() {
+        List<User> user= userRepository.findAll();
+        ApiResponse apiResponse = new ApiResponse();
+        UsersListWrapper userWrapper = new UsersListWrapper();
+        userWrapper.setUsersList(user);
+        apiResponse.setData(userWrapper);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
     @GetMapping("/users/{id}")
@@ -41,13 +47,17 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String postUser(@Valid @RequestBody User user) {
-        userRepository.save(user);
-        return "User added Successfully";
+    public ResponseEntity<ApiResponse> postUser(@Valid @RequestBody User user) {
+       User user1= userRepository.save(user);
+       ApiResponse apiResponse=new ApiResponse();
+       UserWrapper userWrapper=new UserWrapper();
+       userWrapper.setUser(user1);
+       apiResponse.setData(userWrapper);
+       return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.CREATED);
     }
 
     @PutMapping("/users/{id}")
-    public User updateUser(@Valid @RequestBody User user, @PathVariable  int id) {
+    public ResponseEntity<ApiResponse> updateUser(@Valid @RequestBody User user, @PathVariable  int id) {
       Optional<User> optionalUser=userRepository.findById(id);
       if (optionalUser.isPresent()){
           User newUser=optionalUser.get();
@@ -60,7 +70,12 @@ public class UserController {
           if (user.getAddress()!=null){
               newUser.setAddress(user.getAddress());
           }
-           return userRepository.save(newUser);
+          User user1= userRepository.save(newUser);
+          ApiResponse apiResponse=new ApiResponse();
+          UserWrapper userWrapper=new UserWrapper();
+          userWrapper.setUser(user1);
+          apiResponse.setData(userWrapper);
+          return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.OK);
 
       }
         else {
@@ -69,11 +84,10 @@ public class UserController {
     }
 
     @DeleteMapping("users/{id}")
-    public String deleteUser(@PathVariable int id) {
+    public ResponseEntity<String> deleteUser(@PathVariable int id) {
        Optional<User> user=userRepository.findById(id);
         if (user.isPresent()){
-            userRepository.deleteById(id);
-            return "user deleted successfully id:"+id;
+            return new ResponseEntity<>("User deleted Successfully",HttpStatus.OK);
         }
         else {
             throw  new ResourceNotFoundException("user","id:", id, "1001");
