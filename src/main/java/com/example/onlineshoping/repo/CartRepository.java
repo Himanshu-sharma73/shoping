@@ -1,4 +1,4 @@
-package com.example.onlineshoping.Repo;
+package com.example.onlineshoping.repo;
 
 import com.example.onlineshoping.entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,10 +1,10 @@
 package com.example.onlineshoping.controller;
 
 
-import com.example.onlineshoping.Repo.CartRepository;
-import com.example.onlineshoping.Repo.ItemRepository;
-import com.example.onlineshoping.Repo.ProductRepository;
-import com.example.onlineshoping.Repo.UserRepository;
+import com.example.onlineshoping.repo.CartRepository;
+import com.example.onlineshoping.repo.ItemRepository;
+import com.example.onlineshoping.repo.ProductRepository;
+import com.example.onlineshoping.repo.UserRepository;
 import com.example.onlineshoping.entity.Cart;
 import com.example.onlineshoping.entity.Item;
 import com.example.onlineshoping.entity.Product;

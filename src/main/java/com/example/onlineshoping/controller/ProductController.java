@@ -1,7 +1,7 @@
 package com.example.onlineshoping.controller;
 
 
-import com.example.onlineshoping.Repo.ProductRepository;
+import com.example.onlineshoping.repo.ProductRepository;
 import com.example.onlineshoping.entity.Product;
 import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;

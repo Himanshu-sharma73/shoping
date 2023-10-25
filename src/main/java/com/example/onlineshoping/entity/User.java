@@ -1,15 +1,14 @@
 package com.example.onlineshoping.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.hibernate.validator.constraints.Range;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -37,5 +36,11 @@ public class User {
     @NotBlank(message = "Address should not be Blank")
     @NotNull(message = "Address should not be Null")
     private String address;
+
+    private String password;
+
+
+    @ManyToMany
+    private Set<Role> roles;
 
 }
