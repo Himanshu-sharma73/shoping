@@ -11,6 +11,9 @@ import com.example.onlineshoping.entity.Product;
 import com.example.onlineshoping.entity.User;
 import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
+import com.example.onlineshoping.wrapperclasses.ProductWrapper;
+import com.example.onlineshoping.wrapperclasses.UserWrapper;
+
 import com.example.onlineshoping.wrapperclasses.ProductListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +28,7 @@ import java.util.stream.Collectors;
 public class CartController {
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductRepository productRepository; 
 
     @Autowired
     private UserRepository userRepository;
@@ -39,7 +42,7 @@ public class CartController {
 
 
     @PostMapping("/addtocart/{userId}/product/{productId}")
-    public ResponseEntity<String> addToCart(@PathVariable int userId, @PathVariable int productId) {
+    public ResponseEntity<ApiResponse> addToCart(@PathVariable int userId, @PathVariable int productId) {
         Optional<User> optionalUser=userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             Optional<Cart> optionalCart = cartRepository.findByUserId(userId);
@@ -52,21 +55,35 @@ public class CartController {
                 Product product=optionalProduct.get();
                 Item item = new Item( product, cart);
                 itemRepository.save(item);
-                return ResponseEntity.ok("Product added to cart successfully");
+                ApiResponse apiResponse = new ApiResponse();
+                ProductWrapper productWrapper = new ProductWrapper();
+                productWrapper.setProduct(product);
+                apiResponse.setData(productWrapper);
+                return new ResponseEntity<ApiResponse> (apiResponse,HttpStatus.OK);
             } else {
                 Cart cart1 = new Cart();
                 User user = userRepository.findById(userId).get();
                 cart1.setUser(user);
                 cartRepository.save(cart1);
-                Product product = productRepository.findById(productId).get();
+                Optional<Product>  optionalProduct = productRepository.findById(productId);
+                if(optionalProduct.isEmpty()){
+                    throw new ResourceNotFoundException("Product", "Id:", productId, "1002");
+                  }
+                Product product=optionalProduct.get();
                 Item item = new Item(product, cart1);
                 itemRepository.save(item);
-                return ResponseEntity.ok("Product added to cart successfully");
+                ApiResponse apiResponse = new ApiResponse();
+                ProductWrapper productWrapper = new ProductWrapper();
+                productWrapper.setProduct(product);
+                apiResponse.setData(productWrapper);
+                return new ResponseEntity<ApiResponse> (apiResponse,HttpStatus.OK);
             }
         }
-       throw new ResourceNotFoundException("User","id:",userId,"1001");
-
+        else {
+        	throw new ResourceNotFoundException("User", "Id", userId, "1001");
+        }
     }
+        
 
     @GetMapping("/users/{userId}/cart")
     public ResponseEntity<ApiResponse> getCart(@PathVariable int userId) {

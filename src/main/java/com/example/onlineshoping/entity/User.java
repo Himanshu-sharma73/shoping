@@ -4,7 +4,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+//import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,10 +24,10 @@ import org.hibernate.validator.constraints.Range;
 @Entity(name = "userdetails")
 public class User {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
 
     @NotNull(message = "User Name should not bee null")
     @Size(min = 3,message = "User name should have at least three Character")
@@ -30,12 +37,13 @@ public class User {
     @Max(value = 9999999999l,message = "Mobile number must not exceed 10 digit")
     private long mobileNo;
 
-    @NotNull(message = "Email should not be null")
-    @Email(message = "Enter Correct Email")
-    private String email;
+	@NotBlank(message = "Email address cannot be blank")
+	@Email(message = "Invalid email address")
+	private String email;
 
-    @NotBlank(message = "Address should not be Blank")
-    @NotNull(message = "Address should not be Null")
-    private String address;
+	@NotBlank(message = "Address should not be Blank")
+	@NotNull(message = "Address should not be Null")
+	
+	private String address;
 
 }
