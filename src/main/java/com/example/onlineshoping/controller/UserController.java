@@ -30,6 +30,7 @@ public class UserController {
         UsersListWrapper userWrapper = new UsersListWrapper();
         userWrapper.setUsersList(user);
         apiResponse.setData(userWrapper);
+
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
