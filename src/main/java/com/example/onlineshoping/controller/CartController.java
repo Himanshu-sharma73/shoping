@@ -12,7 +12,6 @@ import com.example.onlineshoping.entity.User;
 import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
 import com.example.onlineshoping.wrapperclasses.ProductWrapper;
-import com.example.onlineshoping.wrapperclasses.UserWrapper;
 
 import com.example.onlineshoping.wrapperclasses.ProductListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
