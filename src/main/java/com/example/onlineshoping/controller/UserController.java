@@ -1,6 +1,8 @@
 package com.example.onlineshoping.controller;
 
-import com.example.onlineshoping.Repo.UserRepository;
+
+import com.example.onlineshoping.dto.LoginDto;
+import com.example.onlineshoping.repo.UserRepository;
 import com.example.onlineshoping.entity.User;
 import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
@@ -12,6 +14,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,7 +64,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<ApiResponse> updateUser(@Valid @RequestBody User user, @PathVariable  int id) {
+    public ResponseEntity<ApiResponse> updateUser(  @RequestBody User user, @PathVariable  int id) {
       Optional<User> optionalUser=userRepository.findById(id);
       if (optionalUser.isPresent()){
           User newUser=optionalUser.get();
@@ -67,7 +74,10 @@ public class UserController {
           if(user.getMobileNo()!=0){
               newUser.setMobileNo(user.getMobileNo());
           }
-          if (user.getAddress()!=null){
+          if(user.getEmail()!=null){
+              newUser.setEmail(user.getEmail());
+          }
+          if (!StringUtils.isEmpty(user.getAddress())){
               newUser.setAddress(user.getAddress());
           }
           User user1= userRepository.save(newUser);
@@ -94,7 +104,20 @@ public class UserController {
 
         }
     }
+
+
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @PostMapping("/login")
+    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto){
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginDto.getEmail(), loginDto.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new ResponseEntity<>("User login successfully!.", HttpStatus.OK);
+    }
 }
+
 
 
 
