@@ -52,4 +52,6 @@ public class User {
 	@NotNull(message = "Address should not be Null")
 	
 	private String address;
+
+	private String password;
 }

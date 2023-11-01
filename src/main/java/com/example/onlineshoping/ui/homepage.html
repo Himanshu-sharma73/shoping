@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Home Page</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .user-info {
+            flex: 1;
+            margin-right: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-details {
+            flex: 2;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .user-details {
+            margin-top: 10px;
+        }
+
+        .product-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .product-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .product-item {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .product-price {
+            font-weight: bold;
+        }
+
+        .cart-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .cart-items {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cart-item {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="user-info">
+  <div class="user-title">User Details</div>
+  <div class="user-details">
+    <p>User ID: 12345</p>
+    <p>User Name: John Doe</p>
+  </div>
+</div>
+
+<div class="product-details">
+  <div class="product-title">Product Details</div>
+  <ul class="product-list">
+    <li class="product-item">
+      <h3>Product 1</h3>
+      <p>Price: $19.99</p>
+      <p>Tax: $2.00</p>
+      <p>Discount: $3.00</p>
+      <p>Final Price: $18.99</p>
+    </li>
+    <li class="product-item">
+      <h3>Product 2</h3>
+      <p>Price: $29.99</p>
+      <p>Tax: $3.00</p>
+      <p>Discount: $5.00</p>
+      <p>Final Price: $27.99</p>
+    </li>
+  </ul>
+</div>
+
+<div class="cart">
+  <div class="cart-title">Shopping Cart</div>
+  <ul class="cart-items">
+    <li class="cart-item">Product 1 x1</li>
+    <li class="cart-item">Product 2 x2</li>
+  </ul>
+  <div class="cart-total">Total: $73.97</div>
+</div>
+</body>
+</html>

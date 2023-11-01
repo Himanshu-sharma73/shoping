@@ -48,7 +48,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<ApiResponse> postProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<ApiResponse> postProduct(@RequestBody Product product) {
         Product product1 = productRepository.save(product);
         ApiResponse apiResponse = new ApiResponse();
         ProductWrapper productWrapper = new ProductWrapper();
@@ -109,6 +109,7 @@ public class ProductController {
         } else {
             throw new ResourceNotFoundException("Product", "id", id, "1002");
         }
+
 
     }
 
