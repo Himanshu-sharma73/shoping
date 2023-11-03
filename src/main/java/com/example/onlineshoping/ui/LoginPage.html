@@ -1,9 +1,17 @@
-<!-- HTML login page -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Login Page</title>
-    <script>
+</head>
+<body>
+<h1>Login</h1>
+<form id="login-form">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button type="submit">Login</button>
+</form>
+
+<script>
         document.getElementById('login-form').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -15,8 +23,7 @@
                 password: password
             };
 
-
-            fetch('/users/pass', {
+            fetch('http://localhost:8081/users/pass', {
                 method: 'GET',  // Change to POST request for better security
                 headers: {
                     'Content-Type': 'application/json'
@@ -39,15 +46,5 @@
             });
         });
     </script>
-</head>
-<body>
-<h1>Login</h1>
-<form id="login-form">
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button type="submit">Login</button>
-</form>
-
-
 </body>
 </html>
