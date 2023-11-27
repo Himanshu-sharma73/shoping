@@ -29,5 +29,6 @@ public class ExceptionControllerAdvice {
 		return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
 	}
 
+
 }
 

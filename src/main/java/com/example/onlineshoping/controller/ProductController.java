@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("http://localhost:4200,http://localhost:4401")
 public class ProductController {
 
     @Autowired
@@ -48,7 +49,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<ApiResponse> postProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<ApiResponse> postProduct(@RequestBody Product product) {
         Product product1 = productRepository.save(product);
         ApiResponse apiResponse = new ApiResponse();
         ProductWrapper productWrapper = new ProductWrapper();
@@ -109,6 +110,7 @@ public class ProductController {
         } else {
             throw new ResourceNotFoundException("Product", "id", id, "1002");
         }
+
 
     }
 
