@@ -1,29 +1,29 @@
 package com.example.onlineshoping.controller;
 
 
-import com.example.onlineshoping.repo.CartRepository;
-import com.example.onlineshoping.repo.ItemRepository;
-import com.example.onlineshoping.repo.ProductRepository;
-import com.example.onlineshoping.repo.UserRepository;
 import com.example.onlineshoping.entity.Cart;
 import com.example.onlineshoping.entity.Item;
 import com.example.onlineshoping.entity.Product;
 import com.example.onlineshoping.entity.User;
 import com.example.onlineshoping.exception.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
-import com.example.onlineshoping.wrapperclasses.ProductWrapper;
-
+import com.example.onlineshoping.repo.CartRepository;
+import com.example.onlineshoping.repo.ItemRepository;
+import com.example.onlineshoping.repo.ProductRepository;
+import com.example.onlineshoping.repo.UserRepository;
 import com.example.onlineshoping.wrapperclasses.ProductListWrapper;
+import com.example.onlineshoping.wrapperclasses.ProductWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin("http://localhost:4200,http://localhost:4401")
 public class CartController {
 
     @Autowired
@@ -132,7 +132,33 @@ public class CartController {
         else {
             throw new ResourceNotFoundException("User","Id:",userId,"1001");
         }
+    }
 
+    @GetMapping("/users/{userId}/cart/product/{productId}")
+    public boolean isProductInCart(@PathVariable int userId, @PathVariable int productId) {
+        Optional<Cart> optionalCart=cartRepository.findByUserId(userId);
+        if (optionalCart.isPresent()) {
+            List<Item> itemList=itemRepository.findByCartId(optionalCart.get().getId());
+            return itemList.stream()
+                    .anyMatch(item -> item.getProduct().getId() == productId);
+        }
+        return false;
+    }
+
+    @DeleteMapping("/users/{userId}/cart/product/{productId}")
+    public ResponseEntity<Object> deleteFromCart(@PathVariable int userId, @PathVariable int productId) {
+        Optional<Cart> cart = cartRepository.findByUserId(userId);
+        if (cart.isPresent()) {
+            List<Item> items = itemRepository.findByCartId(cart.get().getId());
+            Optional<Item> itemToDelete = items.stream()
+                    .filter(item -> item.getProduct().getId() == productId)
+                    .findFirst();
+            itemToDelete.ifPresent(item -> itemRepository.deleteById(item.getId()));
+
+            return ResponseEntity.ok().body(Map.of("status", "success", "message", "Product removed from the cart successfully"));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("status", "error", "message", "Cart not found"));
+        }
     }
 
 

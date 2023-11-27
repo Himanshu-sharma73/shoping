@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("http://localhost:4200,http://localhost:4401")
 public class ProductController {
 
     @Autowired
