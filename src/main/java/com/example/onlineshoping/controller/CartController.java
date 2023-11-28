@@ -11,12 +11,15 @@ import com.example.onlineshoping.repo.CartRepository;
 import com.example.onlineshoping.repo.ItemRepository;
 import com.example.onlineshoping.repo.ProductRepository;
 import com.example.onlineshoping.repo.UserRepository;
+import com.example.onlineshoping.wrapperclasses.ProductDetails;
 import com.example.onlineshoping.wrapperclasses.ProductListWrapper;
 import com.example.onlineshoping.wrapperclasses.ProductWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +44,7 @@ public class CartController {
 
 
     @PostMapping("/addtocart/{userId}/product/{productId}")
-    public ResponseEntity<ApiResponse> addToCart(@PathVariable int userId, @PathVariable int productId) {
+    public ResponseEntity<ApiResponse> addToCart(@PathVariable int userId, @PathVariable int productId, @RequestBody Map<String, Integer> requestBody) {
         Optional<User> optionalUser=userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             Optional<Cart> optionalCart = cartRepository.findByUserId(userId);
@@ -52,7 +55,8 @@ public class CartController {
                     throw  new ResourceNotFoundException("Product","id:", productId,"1002");
                 }
                 Product product=optionalProduct.get();
-                Item item = new Item( product, cart);
+                int quantity = requestBody.get("quantity");
+                Item item = new Item( product, cart,quantity);
                 itemRepository.save(item);
                 ApiResponse apiResponse = new ApiResponse();
                 ProductWrapper productWrapper = new ProductWrapper();
@@ -69,7 +73,8 @@ public class CartController {
                     throw new ResourceNotFoundException("Product", "Id:", productId, "1002");
                   }
                 Product product=optionalProduct.get();
-                Item item = new Item(product, cart1);
+                int quantity = requestBody.get("quantity");
+                Item item = new Item(product, cart1,quantity);
                 itemRepository.save(item);
                 ApiResponse apiResponse = new ApiResponse();
                 ProductWrapper productWrapper = new ProductWrapper();
@@ -94,37 +99,42 @@ public class CartController {
             if (optionalCart.isPresent()) {
                 cart = optionalCart.get();
                 List<Item> cartItems = itemRepository.findByCartId(cart.getId());
-                List<Product> products = cartItems.stream().map(i -> i.getProduct()).collect(Collectors.toList());
+                List<Product> products = cartItems.stream().map(Item::getProduct).collect(Collectors.toList());
 
+                List<ProductDetails> productDetailsList = new ArrayList<>();
 
                 double totalMRP=0;
                 int totalDiscountPercentage=0;
                 long totalTax=0;
-                double totalCost=0;
-                for (int i=0;i<products.size();i++){
-                    Product product=products.get(i);
-                    totalMRP+=product.getMrp();
-                    totalDiscountPercentage+=product.getDiscountPercentage();
-                    totalTax+=product.getTax();
+                double allTotalCost=0;
+                for (Item item : cartItems) {
+                    Product product = item.getProduct();
+                    int quantity = item.getQuantity();
+
+
+                    totalMRP = product.getMrp();
+                    totalDiscountPercentage = product.getDiscountPercentage();
+                    totalTax = product.getTax();
+                    double totalCost= quantity*(((totalMRP + (totalMRP * totalTax / 100)) * (100 - totalDiscountPercentage)) / 100);
+                    totalCost = Math.round(totalCost * 100.0) / 100.0;
+                    allTotalCost+=totalCost;
+                    ProductDetails productDetails = new ProductDetails(product, quantity,totalCost);
+                    productDetailsList.add(productDetails);
                 }
 
-                totalCost=((totalMRP+(totalMRP*totalTax/100))*(100-totalDiscountPercentage))/100;
-
                 ProductListWrapper productListWrapper=new ProductListWrapper();
-                productListWrapper.setTotalMRP(totalMRP);
-                productListWrapper.setTotalDiscountPercentage(totalDiscountPercentage);
-                productListWrapper.setTotalTax(totalTax);
-                productListWrapper.setTotalCost(totalCost);
+                productListWrapper.setProductLists(productDetailsList);
+                allTotalCost = Math.round(allTotalCost * 100.0) / 100.0;
+                productListWrapper.setAllTotalCost(allTotalCost);
 
                 ApiResponse apiResponse=new ApiResponse();
-                productListWrapper.setProductList(products);
                 apiResponse.setData(productListWrapper);
                 return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.OK);
             }
             else {
                 ApiResponse apiResponse=new ApiResponse();
                 ProductListWrapper productListWrapper=new ProductListWrapper();
-                productListWrapper.setProductList(null);
+               // productListWrapper.setProductList(null);
                 apiResponse.setData(productListWrapper);
                 return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.OK);
             }

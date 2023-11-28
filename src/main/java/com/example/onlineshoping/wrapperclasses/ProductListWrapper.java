@@ -8,8 +8,7 @@ import java.util.List;
 @Data
 public class ProductListWrapper {
     private List<Product> productList;
-    private double totalMRP;
-    private int totalDiscountPercentage;
-    private  long totalTax;
-    private double totalCost;
+    private List<ProductDetails> productLists;
+    private double allTotalCost;
+
 }
