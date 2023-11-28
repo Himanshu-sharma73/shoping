@@ -22,8 +22,10 @@ public class Item {
     @ManyToOne
     private Cart cart;
 
-    public Item(Product product,Cart cart){
+    private int quantity;
+    public Item(Product product,Cart cart,int quantity){
         this.product=product;
         this.cart=cart;
+        this.quantity=quantity;
     }
 }

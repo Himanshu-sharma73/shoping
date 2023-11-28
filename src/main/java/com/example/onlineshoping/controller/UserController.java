@@ -56,8 +56,8 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<ApiResponse> postUser(@Valid @RequestBody User user) {
        User user1= userRepository.save(user);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
+       HttpHeaders headers = new HttpHeaders();
+       headers.add("Content-Type", "application/json");
        ApiResponse apiResponse=new ApiResponse();
        UserWrapper userWrapper=new UserWrapper();
        userWrapper.setUser(user1);
