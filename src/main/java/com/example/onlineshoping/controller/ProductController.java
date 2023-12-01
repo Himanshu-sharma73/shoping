@@ -55,7 +55,6 @@ public class ProductController {
         ProductWrapper productWrapper = new ProductWrapper();
         productWrapper.setProduct(product1);
         apiResponse.setData(productWrapper);
-
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
