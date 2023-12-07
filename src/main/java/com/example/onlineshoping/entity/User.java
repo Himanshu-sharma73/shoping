@@ -53,10 +53,5 @@ public class User {
 	
 	private String address;
 
-    private String password;
-
-
-    @ManyToMany
-    private Set<Role> roles;
-
+	private String password;
 }
