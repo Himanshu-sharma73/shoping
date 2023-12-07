@@ -1,6 +1,10 @@
 package com.example.onlineshoping.controller;
 
 
+import com.example.onlineshoping.entity.Cart;
+import com.example.onlineshoping.entity.Item;
+import com.example.onlineshoping.repo.CartRepository;
+import com.example.onlineshoping.repo.ItemRepository;
 import com.example.onlineshoping.repo.UserRepository;
 import com.example.onlineshoping.entity.User;
 import com.example.onlineshoping.exception.ApiResponse;
@@ -17,10 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @CrossOrigin("http://localhost:4200,http://localhost:4401")
@@ -29,6 +30,12 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    CartRepository cartRepository;
+
+    @Autowired
+    ItemRepository itemRepository;
 
     @GetMapping("/users")
     public ResponseEntity<ApiResponse> getAllUser() {
@@ -100,6 +107,19 @@ public class UserController {
     public ResponseEntity<Object> deleteUser(@PathVariable int id) {
        Optional<User> user=userRepository.findById(id);
         if (user.isPresent()){
+            User user1=user.get();
+           Optional<Cart> optionalCart=cartRepository.findByUserId(id);
+           if(optionalCart.isPresent()){
+               int  cartId= optionalCart.get().getId();
+               List<Item> items = itemRepository.findByCartId(cartId);
+               if (!items.isEmpty()) {
+                   for (Item item : items) {
+                       int itemId = item.getId();
+                       itemRepository.deleteById(itemId);
+                   }
+               }
+               cartRepository.deleteById(cartId);
+           }
             userRepository.deleteById(id);
             return ResponseEntity.ok().body(Map.of("message", "User deleted Successfully"));
         }
