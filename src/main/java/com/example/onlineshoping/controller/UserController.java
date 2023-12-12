@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,9 @@ public class UserController {
     @Autowired
     ItemRepository itemRepository;
 
+    @Autowired
+    PasswordEncoder encoder;
+
     @GetMapping("/users")
     public ResponseEntity<ApiResponse> getAllUser() {
         List<User> user= userRepository.findAll();
@@ -55,6 +59,7 @@ public class UserController {
         }
         ApiResponse apiResponse = new ApiResponse();
         UserWrapper userWrapper = new UserWrapper();
+       // user.get().setPassword();
         userWrapper.setUser(user.get());
         apiResponse.setData(userWrapper);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
@@ -62,6 +67,7 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<ApiResponse> postUser(@Valid @RequestBody User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
        User user1= userRepository.save(user);
        HttpHeaders headers = new HttpHeaders();
        headers.add("Content-Type", "application/json");
