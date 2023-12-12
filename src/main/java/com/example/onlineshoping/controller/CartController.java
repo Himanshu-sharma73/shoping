@@ -12,7 +12,7 @@ import com.example.onlineshoping.repo.ItemRepository;
 import com.example.onlineshoping.repo.ProductRepository;
 import com.example.onlineshoping.repo.UserRepository;
 import com.example.onlineshoping.wrapperclasses.ProductDetails;
-import com.example.onlineshoping.wrapperclasses.ProductListWrapper;
+import com.example.onlineshoping.wrapperclasses.ProductListsWrapper;
 import com.example.onlineshoping.wrapperclasses.ProductWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -122,7 +122,7 @@ public class CartController {
                     productDetailsList.add(productDetails);
                 }
 
-                ProductListWrapper productListWrapper=new ProductListWrapper();
+                ProductListsWrapper productListWrapper=new ProductListsWrapper();
                 productListWrapper.setProductLists(productDetailsList);
                 allTotalCost = Math.round(allTotalCost * 100.0) / 100.0;
                 productListWrapper.setAllTotalCost(allTotalCost);
@@ -133,7 +133,7 @@ public class CartController {
             }
             else {
                 ApiResponse apiResponse=new ApiResponse();
-                ProductListWrapper productListWrapper=new ProductListWrapper();
+                ProductListsWrapper productListWrapper=new ProductListsWrapper();
                // productListWrapper.setProductList(null);
                 apiResponse.setData(productListWrapper);
                 return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.OK);

@@ -3,6 +3,7 @@ package com.example.onlineshoping.controller;
 
 import com.example.onlineshoping.entity.Cart;
 import com.example.onlineshoping.entity.Item;
+import com.example.onlineshoping.exception.UserExitByEmailException;
 import com.example.onlineshoping.repo.CartRepository;
 import com.example.onlineshoping.repo.ItemRepository;
 import com.example.onlineshoping.repo.UserRepository;
@@ -67,6 +68,9 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<ApiResponse> postUser(@Valid @RequestBody User user) {
+        if (userRepository.existsByEmail(user.getEmail())){
+            throw new UserExitByEmailException("User","email",user.getEmail(),"1005");
+        }
         user.setPassword(encoder.encode(user.getPassword()));
        User user1= userRepository.save(user);
        HttpHeaders headers = new HttpHeaders();

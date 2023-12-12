@@ -28,9 +28,9 @@ public class ProductController {
     public ResponseEntity<ApiResponse> getProductDetails() {
         List<Product> products = productRepository.findAll();
         ApiResponse apiResponse = new ApiResponse();
-        ProductListWrapper productListWrapper = new ProductListWrapper();
-        productListWrapper.setProductList(products);
-        apiResponse.setData(productListWrapper);
+        ProductListWrapper productWrapper=new ProductListWrapper();
+        productWrapper.setProductList(products);
+        apiResponse.setData(productWrapper);
 
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
