@@ -41,10 +41,11 @@ public class User implements UserDetails{
 
 	@NotBlank(message = "Address should not be Blank")
 	@NotNull(message = "Address should not be Null")
-
 	private String address;
-
+	@NotBlank(message = "Password should not be Blank")
+	@NotNull(message = "Password should not be Null")
 	private String password;
+
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
