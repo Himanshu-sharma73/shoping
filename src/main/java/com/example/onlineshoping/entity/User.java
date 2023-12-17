@@ -46,6 +46,8 @@ public class User implements UserDetails{
 	@NotNull(message = "Password should not be Null")
 	private String password;
 
+	@Transient
+	private  String token;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;

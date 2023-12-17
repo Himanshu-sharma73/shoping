@@ -3,15 +3,13 @@ package com.example.onlineshoping.controller;
 
 import com.example.onlineshoping.repo.UserRepository;
 import com.example.onlineshoping.entity.User;
-import com.example.onlineshoping.exception.ApiResponse;
+import com.example.onlineshoping.responce.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
 
 
 import com.example.onlineshoping.wrapperclasses.UserWrapper;
 import com.example.onlineshoping.wrapperclasses.UsersListWrapper;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -52,17 +50,17 @@ public class UserController {
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<ApiResponse> postUser(@Valid @RequestBody User user) {
-       User user1= userRepository.save(user);
-       HttpHeaders headers = new HttpHeaders();
-       headers.add("Content-Type", "application/json");
-       ApiResponse apiResponse=new ApiResponse();
-       UserWrapper userWrapper=new UserWrapper();
-       userWrapper.setUser(user1);
-       apiResponse.setData(userWrapper);
-       return  new ResponseEntity<ApiResponse>(apiResponse,headers,HttpStatus.OK);
-    }
+//    @PostMapping("/users")
+//    public ResponseEntity<ApiResponse> postUser(@Valid @RequestBody User user) {
+//       User user1= userRepository.save(user);
+//       HttpHeaders headers = new HttpHeaders();
+//       headers.add("Content-Type", "application/json");
+//       ApiResponse apiResponse=new ApiResponse();
+//       UserWrapper userWrapper=new UserWrapper();
+//       userWrapper.setUser(user1);
+//       apiResponse.setData(userWrapper);
+//       return  new ResponseEntity<ApiResponse>(apiResponse,headers,HttpStatus.OK);
+//    }
 
     @CrossOrigin("http://localhost:4200")
     @PutMapping("/users/{id}")

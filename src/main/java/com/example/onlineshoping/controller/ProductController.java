@@ -3,7 +3,7 @@ package com.example.onlineshoping.controller;
 
 import com.example.onlineshoping.repo.ProductRepository;
 import com.example.onlineshoping.entity.Product;
-import com.example.onlineshoping.exception.ApiResponse;
+import com.example.onlineshoping.responce.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
 import com.example.onlineshoping.wrapperclasses.ProductListWrapper;
 import com.example.onlineshoping.wrapperclasses.ProductWrapper;
@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class ProductController {
     private ProductRepository productRepository;
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/products")
     public ResponseEntity<ApiResponse> getProductDetails() {
         List<Product> products = productRepository.findAll();

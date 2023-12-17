@@ -1,4 +1,4 @@
-package com.example.onlineshoping.exception;
+package com.example.onlineshoping.responce;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

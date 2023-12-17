@@ -1,8 +1,8 @@
 package com.example.onlineshoping.exception;
 
+import com.example.onlineshoping.responce.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +27,14 @@ public class ExceptionControllerAdvice {
 		ApiResponse apiResponse = new ApiResponse();
 		apiResponse.setError(cartException);
 		return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
+	}
+
+	@ExceptionHandler(UserExitByEmailException.class)
+	public final ResponseEntity<ApiResponse> userFound(UserExitByEmailException e){
+		ShoppingCartException cartException=new ShoppingCartException("1005",e.getMessage(),"This email address is already taken");
+		ApiResponse apiResponse = new ApiResponse();
+		apiResponse.setError(cartException);
+		return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
 	}
 
 
