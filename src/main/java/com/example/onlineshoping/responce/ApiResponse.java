@@ -8,8 +8,6 @@ import lombok.Setter;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
 public class ApiResponse {
 	private Object data;
 	private Object error;

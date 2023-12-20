@@ -73,8 +73,10 @@ public class  AuthenticationController {
             AuthResponse authResponse=new AuthResponse();
             BeanUtils.copyProperties(user,authResponse);
             authResponse.setToken(jwtToken);
+            AuthResponseWrapper authResponseWrapper=new AuthResponseWrapper();
+            authResponseWrapper.setUser(authResponse);
             ApiResponse apiResponse=new ApiResponse();
-            apiResponse.setData(authResponse);
+            apiResponse.setData(authResponseWrapper);
 
             return ResponseEntity.ok(apiResponse);
         } catch (BadCredentialsException e) {
