@@ -37,6 +37,20 @@ public class ExceptionControllerAdvice {
 		return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
 	}
 
+	@ExceptionHandler(UserRoleNotFoundException.class)
+	public final ResponseEntity<ApiResponse> roleNotFound(UserRoleNotFoundException e){
+		ShoppingCartException cartException=new ShoppingCartException("1010",e.getMessage(),"please enter role");
+		ApiResponse apiResponse=new ApiResponse();
+		apiResponse.setError(cartException);
+		return new  ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
+	}
+	@ExceptionHandler(Exception.class)
+	public final ResponseEntity<ApiResponse> defaultException(Exception e){
+		ShoppingCartException cartException=new ShoppingCartException("1011",e.getMessage(),"There is error please check");
+		ApiResponse apiResponse=new ApiResponse();
+		apiResponse.setError(cartException);
+		return new  ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
+	}
 
 }
 

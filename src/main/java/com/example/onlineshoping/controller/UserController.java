@@ -1,6 +1,7 @@
 package com.example.onlineshoping.controller;
 
 
+import com.example.onlineshoping.dto.UserDto;
 import com.example.onlineshoping.repo.UserRepository;
 import com.example.onlineshoping.entity.User;
 import com.example.onlineshoping.responce.ApiResponse;
@@ -9,15 +10,19 @@ import com.example.onlineshoping.exception.ResourceNotFoundException;
 
 import com.example.onlineshoping.wrapperclasses.UserWrapper;
 import com.example.onlineshoping.wrapperclasses.UsersListWrapper;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("http://localhost:4200,http://localhost:4401")
@@ -29,61 +34,59 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<ApiResponse> getAllUser() {
-        List<User> user= userRepository.findAll();
+        List<User> userList = userRepository.findAll();
+        List<UserDto> userDtoList = userList.stream()
+                .map(user -> {
+                    UserDto userDto = new UserDto();
+                    BeanUtils.copyProperties(user, userDto);
+                    return userDto;
+                })
+                .collect(Collectors.toList());
         ApiResponse apiResponse = new ApiResponse();
         UsersListWrapper userWrapper = new UsersListWrapper();
-        userWrapper.setUsersList(user);
+        userWrapper.setUsersList(userDtoList);
         apiResponse.setData(userWrapper);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<ApiResponse> getUserById(@PathVariable int id) {
-        Optional<User> user= userRepository.findById(id);
-        if(user.isEmpty()) {
+        Optional<User> optionalUser= userRepository.findById(id);
+        if(optionalUser.isEmpty()) {
         	throw new ResourceNotFoundException("user","id:", id, "1001");
         }
+        User user=optionalUser.get();
+        UserDto userDto=new UserDto();
+        BeanUtils.copyProperties(user,userDto);
         ApiResponse apiResponse = new ApiResponse();
         UserWrapper userWrapper = new UserWrapper();
-        userWrapper.setUser(user.get());
+        userWrapper.setUser(userDto);
         apiResponse.setData(userWrapper);
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
-//    @PostMapping("/users")
-//    public ResponseEntity<ApiResponse> postUser(@Valid @RequestBody User user) {
-//       User user1= userRepository.save(user);
-//       HttpHeaders headers = new HttpHeaders();
-//       headers.add("Content-Type", "application/json");
-//       ApiResponse apiResponse=new ApiResponse();
-//       UserWrapper userWrapper=new UserWrapper();
-//       userWrapper.setUser(user1);
-//       apiResponse.setData(userWrapper);
-//       return  new ResponseEntity<ApiResponse>(apiResponse,headers,HttpStatus.OK);
-//    }
-
-    @CrossOrigin("http://localhost:4200")
     @PutMapping("/users/{id}")
-    public ResponseEntity<ApiResponse> updateUser(@RequestBody User user, @PathVariable  int id) {
+    public ResponseEntity<ApiResponse> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable  int id) {
       Optional<User> optionalUser=userRepository.findById(id);
       if (optionalUser.isPresent()){
           User newUser=optionalUser.get();
-          if(user.getName()!=null){
-              newUser.setName(user.getName());
+          if(userDto.getName()!=null){
+              newUser.setName(userDto.getName());
           }
-          if(user.getMobileNo()!=0){
-              newUser.setMobileNo(user.getMobileNo());
+          if(userDto.getMobileNo()!=0){
+              newUser.setMobileNo(userDto.getMobileNo());
           }
-          if(user.getEmail()!=null){
-              newUser.setEmail(user.getEmail());
+          if(userDto.getEmail()!=null){
+              newUser.setEmail(userDto.getEmail());
           }
-          if (!StringUtils.isEmpty(user.getAddress())){
-              newUser.setAddress(user.getAddress());
+          if (userDto.getAddress()!=null){
+              newUser.setAddress(userDto.getAddress());
           }
-          User user1= userRepository.save(newUser);
+          User savedUser= userRepository.save(newUser);
+          BeanUtils.copyProperties(savedUser,userDto);
           ApiResponse apiResponse=new ApiResponse();
           UserWrapper userWrapper=new UserWrapper();
-          userWrapper.setUser(user1);
+          userWrapper.setUser(userDto);
           apiResponse.setData(userWrapper);
           return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.OK);
 
@@ -104,19 +107,6 @@ public class UserController {
             throw  new ResourceNotFoundException("user","id:", id, "1001");
 
         }
-    }
-
-    @PostMapping("/users/pass")
-    public Optional<User> getByPassword(@RequestBody User user){
-        Optional<User> user1=userRepository.findById(user.getId());
-        if(user1.isPresent()) {
-            if (user.getPassword().equals(user1.get().getPassword())) {
-                return user1;
-            } else {
-               throw new ResourceNotFoundException("Users","password",100,"1006");
-            }
-        }
-        throw new ResourceNotFoundException("User","id:", user.getId(), "1001");
     }
 
 }

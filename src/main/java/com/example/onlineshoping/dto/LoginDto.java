@@ -1,4 +1,4 @@
-package com.example.onlineshoping.config;
+package com.example.onlineshoping.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class LoginDto {
 
   private String email;
   String password;

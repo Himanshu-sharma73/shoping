@@ -38,6 +38,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse> getProductDetailsById(@PathVariable int id) {
         Optional<Product> products = productRepository.findById(id);
         if (products.isEmpty()) {

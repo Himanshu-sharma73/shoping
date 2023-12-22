@@ -7,13 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -26,7 +20,6 @@ public class User{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-
 
     @NotNull(message = "User Name should not bee null")
     @Size(min = 3,message = "User name should have at least three Character")
@@ -43,6 +36,7 @@ public class User{
 	@NotBlank(message = "Address should not be Blank")
 	@NotNull(message = "Address should not be Null")
 	private String address;
+
 	@NotBlank(message = "Password should not be Blank")
 	@NotNull(message = "Password should not be Null")
 	private String password;

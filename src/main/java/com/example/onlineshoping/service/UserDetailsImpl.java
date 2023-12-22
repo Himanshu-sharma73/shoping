@@ -3,34 +3,42 @@ package com.example.onlineshoping.service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.example.onlineshoping.entity.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Data
 public class UserDetailsImpl implements UserDetails {
-  private static final long serialVersionUID = 1L;
 
   private int id;
 
-  private String username;
+  private String name;
 
   private String email;
 
-  @JsonIgnore
+  private long mobileNo;
   private String password;
+
+  private String address;
+
+  private  String token;
 
   private Collection<? extends GrantedAuthority> authorities;
 
-  public UserDetailsImpl(int id, String username, String email, String password,
-      Collection<? extends GrantedAuthority> authorities) {
+  public UserDetailsImpl(int id, String name, String email,long mobileNo, String password,String address,
+                         Collection<? extends GrantedAuthority> authorities) {
     this.id = id;
-    this.username = username;
+    this.name = name;
     this.email = email;
+    this.mobileNo=mobileNo;
     this.password = password;
+    this.address=address;
     this.authorities = authorities;
   }
 
@@ -43,7 +51,9 @@ public class UserDetailsImpl implements UserDetails {
         user.getId(), 
         user.getName(),
         user.getEmail(),
-        user.getPassword(), 
+        user.getMobileNo(),
+        user.getPassword(),
+        user.getAddress(),
         authorities);
   }
 
@@ -67,7 +77,7 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public String getUsername() {
-    return username;
+    return name;
   }
 
   @Override
