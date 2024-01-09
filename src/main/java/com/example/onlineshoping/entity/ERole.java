@@ -2,6 +2,6 @@ package com.example.onlineshoping.entity;
 
 public enum ERole {
     ROLE_USER,
-    ROLE_MODERATOR,
+    ROLE_PROD,
     ROLE_ADMIN
 }

@@ -44,13 +44,13 @@ public class ExceptionControllerAdvice {
 		apiResponse.setError(cartException);
 		return new  ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
 	}
-	@ExceptionHandler(Exception.class)
+/*	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ApiResponse> defaultException(Exception e){
 		ShoppingCartException cartException=new ShoppingCartException("1011",e.getMessage(),"There is error please check");
 		ApiResponse apiResponse=new ApiResponse();
 		apiResponse.setError(cartException);
-		return new  ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
-	}
+		return new  ResponseEntity<ApiResponse>(apiResponse,HttpStatus.BAD_REQUEST);
+	}*/
 
 }
 

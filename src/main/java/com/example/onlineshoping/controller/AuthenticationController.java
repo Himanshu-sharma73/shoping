@@ -29,9 +29,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/auth")
@@ -60,11 +62,7 @@ public class  AuthenticationController {
         User user = new User();
         BeanUtils.copyProperties(userDto,user);
         List<String> strRoles = userDto.getRoles();
-        Set<Role> roles = new HashSet<>();
-        user.setRoles(roles);
-        String jwt=jwtUtils.generateJwtToken(UserDetailsImpl.build(user));
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setToken(jwt);
+        List<Role> roles = new ArrayList<>();
 
         if (strRoles == null) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
@@ -78,10 +76,10 @@ public class  AuthenticationController {
                                 .orElseThrow(() -> new UserRoleNotFoundException("Role not found","Enter roles","1010"));
                         roles.add(adminRole);
                     }
-                    case "mod" -> {
-                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+                    case "prod" -> {
+                        Role prodRole = roleRepository.findByName(ERole.ROLE_PROD)
                                 .orElseThrow(() -> new UserRoleNotFoundException("Role not found","Enter roles","1010"));
-                        roles.add(modRole);
+                        roles.add(prodRole);
                     }
                     default -> {
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
@@ -92,10 +90,19 @@ public class  AuthenticationController {
             });
         }
         user.setRoles(roles);
+        String jwt=jwtUtils.generateJwtToken(UserDetailsImpl.build(user));
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setToken(jwt);
         User savedUser=userRepository.save(user);
         ApiResponse apiResponse=new ApiResponse();
         UserWrapper userWrapper=new UserWrapper();
         BeanUtils.copyProperties(savedUser,userDto);
+        List<Role> roleList = user.getRoles();
+        List<String> roleNamesList = roleList.stream()
+                .map(Role::getName)
+                .map(ERole::name)
+                .collect(Collectors.toList());
+        userDto.setRoles(roleNamesList);
         userWrapper.setUser(userDto);
         apiResponse.setData(userWrapper);
         return ResponseEntity.ok(apiResponse);
@@ -118,7 +125,8 @@ public class  AuthenticationController {
         //BeanUtils.copyProperties(userDetails,userDto);
         userDto.setName(userDetails.getUsername());
         userDto.setEmail(userDetails.getEmail());
-        userDto.setAddress(userDetails.getPassword());
+        userDto.setAddress(userDetails.getAddress());
+        userDto.setPassword(userDetails.getPassword());
         userDto.setMobileNo(userDetails.getMobileNo());
         userDto.setToken(jwt);
         userDto.setRoles(roles);

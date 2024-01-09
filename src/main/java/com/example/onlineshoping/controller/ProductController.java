@@ -7,6 +7,7 @@ import com.example.onlineshoping.responce.ApiResponse;
 import com.example.onlineshoping.exception.ResourceNotFoundException;
 import com.example.onlineshoping.wrapperclasses.ProductListWrapper;
 import com.example.onlineshoping.wrapperclasses.ProductWrapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,14 +20,15 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin("http://localhost:4200,http://localhost:4401")
+@PreAuthorize("hasRole('PROD')  || hasRole('ADMIN')")
 public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
 
-
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/products")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse> getProductDetails() {
         List<Product> products = productRepository.findAll();
         ApiResponse apiResponse = new ApiResponse();
@@ -37,8 +39,9 @@ public class ProductController {
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/products/{id}")
     @PreAuthorize("hasRole('USER')")
+    @GetMapping("/products/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse> getProductDetailsById(@PathVariable int id) {
         Optional<Product> products = productRepository.findById(id);
         if (products.isEmpty()) {
@@ -52,6 +55,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse> postProduct(@RequestBody Product product) {
         Product product1 = productRepository.save(product);
         ApiResponse apiResponse = new ApiResponse();
@@ -63,6 +67,7 @@ public class ProductController {
     }
 
     @DeleteMapping("products/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity deleteProduct(@PathVariable int id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
@@ -74,6 +79,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse> updateProduct(@Valid @RequestBody Product product, @PathVariable Integer id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
@@ -113,8 +119,6 @@ public class ProductController {
         } else {
             throw new ResourceNotFoundException("Product", "id", id, "1002");
         }
-
-
     }
 
 }
