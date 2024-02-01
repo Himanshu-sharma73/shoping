@@ -1,9 +1,10 @@
 package com.example.onlineshoping.config;
 
+import com.example.onlineshoping.controller.SwaggerController;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springframework.context.annotation.Configuration;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.context.annotation.Bean;
 
 @io.swagger.v3.oas.annotations.security.SecurityScheme(
         name = "bearerAuth",
