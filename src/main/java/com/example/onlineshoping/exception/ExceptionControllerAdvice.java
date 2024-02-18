@@ -12,7 +12,6 @@ public class ExceptionControllerAdvice {
 	
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public final ResponseEntity<ApiResponse> handleBadRequest(ResourceNotFoundException e){
-		String message = e.getMessage();
 		ShoppingCartException cartException = new ShoppingCartException(e.getErrorCode(), e.getMessage(), "You are entering wrong details please check them");
 		ApiResponse apiResponse = new ApiResponse();
 		apiResponse.setError(cartException);
@@ -29,6 +28,21 @@ public class ExceptionControllerAdvice {
 		return new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
 	}
 
+	@ExceptionHandler(UserExitByEmailException.class)
+	public final ResponseEntity<ApiResponse> userFound(UserExitByEmailException e){
+		ShoppingCartException cartException=new ShoppingCartException("1005",e.getMessage(),"This email address is already taken");
+		ApiResponse apiResponse = new ApiResponse();
+		apiResponse.setError(cartException);
+		return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
+	}
+
+	@ExceptionHandler(Exception.class)
+	public final ResponseEntity<ApiResponse> defaultException(UserExitByEmailException e){
+		ShoppingCartException cartException=new ShoppingCartException("1006",e.getMessage(),"You are entering wrong details please check them");
+		ApiResponse apiResponse = new ApiResponse();
+		apiResponse.setError(cartException);
+		return  new ResponseEntity<ApiResponse>(apiResponse,HttpStatus.NOT_ACCEPTABLE);
+	}
 
 }
 
