@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDto {
 
+  int id;
+
   @NotNull(message = "User Name should not bee null")
   @Size(min = 3,message = "User name should have at least three Character")
   private String name;

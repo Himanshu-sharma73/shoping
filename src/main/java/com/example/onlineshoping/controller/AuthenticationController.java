@@ -64,24 +64,24 @@ public class  AuthenticationController {
 
         if (strRoles == null) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    .orElseThrow(() -> new UserRoleNotFoundException("Role","In database","Plz add roles"));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin" -> {
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new UserRoleNotFoundException("Role not found","Enter roles","1010"));
+                                .orElseThrow(() -> new UserRoleNotFoundException("Role","In database","Plz add roles"));
                         roles.add(adminRole);
                     }
                     case "prod" -> {
                         Role prodRole = roleRepository.findByName(ERole.ROLE_PROD)
-                                .orElseThrow(() -> new UserRoleNotFoundException("Role not found","Enter roles","1010"));
+                                .orElseThrow(() -> new UserRoleNotFoundException("Role","In database","Plz add roles"));
                         roles.add(prodRole);
                     }
                     default -> {
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new UserRoleNotFoundException("Role not found","Enter roles","1010"));
+                                .orElseThrow(() -> new UserRoleNotFoundException("Role","In database","Plz add roles"));
                         roles.add(userRole);
                     }
                 }
@@ -122,6 +122,7 @@ public class  AuthenticationController {
         UserDto userDto=new UserDto();
         //BeanUtils.copyProperties(userDetails,userDto);
         userDto.setName(userDetails.getUsername());
+        userDto.setId(userDetails.getId());
         userDto.setEmail(userDetails.getEmail());
         userDto.setAddress(userDetails.getAddress());
         userDto.setPassword(userDetails.getPassword());

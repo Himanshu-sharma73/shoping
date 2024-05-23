@@ -3,14 +3,14 @@ package com.example.onlineshoping.exception;
 import lombok.AllArgsConstructor;
 
 public class UserRoleNotFoundException extends RuntimeException {
-    private String errorCode;
     private String resourceName;
-    private String message;
+    private String fieldName;
+    private String fieldValue;
 
-    public UserRoleNotFoundException(String resourceName, String message, String errorCode) {
-        super(String.format("%s not found with %s : %s",resourceName, message));
+    public UserRoleNotFoundException(String resourceName, String fieldName, String fieldValue) {
+        super(String.format("%s not found with %s : %s",resourceName, fieldName,fieldValue));
         this.resourceName = resourceName;
-        this.message = message;
-        this.errorCode = errorCode;
+        this.fieldName = fieldName;
+        this.fieldValue = fieldValue;
     }
 }
